@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deriv WebSocket Test Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .status.disconnected {
+            background: #fee;
+            color: #c33;
+        }
+        
+        .status.connected {
+            background: #efe;
+            color: #3c3;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-connect {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .btn-disconnect {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .btn-action {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .btn-clear {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .custom-request {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .custom-request h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .messages-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .messages-container h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        .message {
+            margin-bottom: 12px;
+            padding: 8px;
+            border-left: 3px solid #667eea;
+            padding-left: 12px;
+        }
+        
+        .message-sent {
+            border-left-color: #43e97b;
+        }
+        
+        .message-received {
+            border-left-color: #4facfe;
+        }
+        
+        .message-system {
+            border-left-color: #f5576c;
+            color: #ffa07a;
+        }
+        
+        .timestamp {
+            color: #888;
+            font-size: 11px;
+            margin-right: 8px;
+        }
+        
+        .message-type {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .sent { color: #43e97b; }
+        .received { color: #4facfe; }
+        .system { color: #f5576c; }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Deriv WebSocket Test Client</h1>
+        <div id="status" class="status disconnected">⚫ ไม่ได้เชื่อมต่อ</div>
+        
+        <div class="controls">
+            <button class="btn-connect" onclick="connect()">🔌 เชื่อมต่อ</button>
+            <button class="btn-disconnect" onclick="disconnect()">🔴 ตัดการเชื่อมต่อ</button>
+            <button class="btn-action" onclick="sendPing()">📡 ส่ง Ping</button>
+            <button class="btn-action" onclick="sendTicks()">📊 Subscribe R_50</button>
+            <button class="btn-action" onclick="sendActiveSymbols()">📋 Active Symbols</button>
+            <button class="btn-clear" onclick="clearMessages()">🗑️ ล้างข้อความ</button>
+        </div>
+
+        <div class="custom-request">
+            <h3>📝 ส่ง Request แบบกำหนดเอง (JSON)</h3>
+            <textarea id="customRequest" placeholder='{"ping": 1}'></textarea>
+            <button class="btn-action" onclick="sendCustom()" style="margin-top: 10px; width: 100%;">📤 ส่ง Custom Request</button>
+        </div>
+
+        <div class="messages-container">
+            <h3>💬 ข้อความ</h3>
+            <div id="messages"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        const messagesDiv = document.getElementById('messages');
+        const statusDiv = document.getElementById('status');
+
+        function updateStatus(connected) {
+            if (connected) {
+                statusDiv.className = 'status connected';
+                statusDiv.textContent = '🟢 เชื่อมต่อแล้ว';
+            } else {
+                statusDiv.className = 'status disconnected';
+                statusDiv.textContent = '⚫ ไม่ได้เชื่อมต่อ';
+            }
+        }
+
+        function getTimestamp() {
+            const now = new Date();
+            return now.toLocaleTimeString('th-TH', { hour12: false });
+        }
+
+        function addMessage(msg, type = 'system') {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message message-${type}`;
+            
+            const timestamp = `<span class="timestamp">[${getTimestamp()}]</span>`;
+            const typeLabel = type === 'sent' ? '<span class="message-type sent">📤 ส่ง:</span>' :
+                            type === 'received' ? '<span class="message-type received">📥 รับ:</span>' :
+                            '<span class="message-type system">ℹ️ ระบบ:</span>';
+            
+            messageEl.innerHTML = `${timestamp}${typeLabel}${escapeHtml(msg)}`;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                addMessage('เชื่อมต่ออยู่แล้ว!');
+                return;
+            }
+
+            addMessage('กำลังเชื่อมต่อไปที่ ws://localhost:3000/ws...');
+            ws = new WebSocket('ws://localhost:3000/ws');
+            
+            ws.onopen = () => {
+                addMessage('✅ เชื่อมต่อสำเร็จ!');
+                updateStatus(true);
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    addMessage(JSON.stringify(data, null, 2), 'received');
+                } catch (e) {
+                    addMessage(event.data, 'received');
+                }
+            };
+
+            ws.onerror = (error) => {
+                addMessage('❌ เกิดข้อผิดพลาด: ตรวจสอบว่า Server ทำงานอยู่ที่ localhost:3000');
+                console.error('WebSocket error:', error);
+            };
+
+            ws.onclose = () => {
+                addMessage('🔌 การเชื่อมต่อถูกปิด');
+                updateStatus(false);
+            };
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                addMessage('ตัดการเชื่อมต่อแล้ว');
+                updateStatus(false);
+            } else {
+                addMessage('ไม่มีการเชื่อมต่ออยู่');
+            }
+        }
+
+        function sendMessage(data) {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                addMessage('❌ ไม่ได้เชื่อมต่อ! กรุณากดปุ่ม "เชื่อมต่อ" ก่อน');
+                return false;
+            }
+            
+            const jsonStr = JSON.stringify(data);
+            ws.send(jsonStr);
+            addMessage(JSON.stringify(data, null, 2), 'sent');
+            return true;
+        }
+
+        function sendPing() {
+            sendMessage({ ping: 1 });
+        }
+
+        function sendTicks() {
+            sendMessage({ 
+                ticks: "R_50", 
+                subscribe: 1 
+            });
+        }
+
+        function sendActiveSymbols() {
+            sendMessage({
+                active_symbols: "brief",
+                product_type: "basic"
+            });
+        }
+
+        function sendCustom() {
+            const textarea = document.getElementById('customRequest');
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                addMessage('❌ กรุณาใส่ JSON request');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(text);
+                sendMessage(data);
+            } catch (e) {
+                addMessage('❌ JSON ไม่ถูกต้อง: ' + e.message);
+            }
+        }
+
+        function clearMessages() {
+            messagesDiv.innerHTML = '';
+            addMessage('ล้างข้อความแล้ว');
+        }
+
+        // เชื่อมต่ออัตโนมัติเมื่อเปิดหน้า
+        window.onload = () => {
+            addMessage('พร้อมใช้งาน! กดปุ่ม "เชื่อมต่อ" เพื่อเริ่มต้น');
+        };
+    </script>
+</body>
+</html>
