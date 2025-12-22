@@ -2,7 +2,7 @@
 /*
 [package]
 name = "deriv-websocket"
-version = "1.1.0"
+version = "1.1.111"
 edition = "2021"
 
 [dependencies]
@@ -254,7 +254,7 @@ mod tests {
         let ping = ping_request();
         assert_eq!(ping["ping"], 1);
 
-        let ticks = ticks_request("R_50");
-        assert_eq!(ticks["ticks"], "R_50");
+        let ticks = ticks_request("R_10");
+        assert_eq!(ticks["ticks"], "R_10");
     }
 }
