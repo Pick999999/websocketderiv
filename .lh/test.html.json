@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1766437029512,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1766438972587,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -272,15 +272,21 @@\n                 addMessage('เชื่อมต่ออยู่แล้ว!');\r\n                 return;\r\n             }\r\n \r\n-            // ตรวจสอบว่าเปิดจาก localhost หรือ production\r\n+            // ตรวจสอบว่าเปิดจาก localhost/127.0.0.1 หรือ production\r\n             // localhost = ใช้ ws:// (ไม่มี SSL)\r\n             // production = ใช้ wss:// (มี SSL)\r\n-            const wsUrl = window.location.hostname === 'localhost' \r\n-                ? 'ws://localhost:3000/ws'           // สำหรับทดสอบ local\r\n-                : 'wss://pkderiv.shop/ws';           // สำหรับ production บน EC2\r\n+            let wsUrl;\r\n+            const hostname = window.location.hostname;\r\n             \r\n+            if (hostname === 'localhost' || hostname === '127.0.0.1') {\r\n+                // ใช้ hostname เดียวกับที่เปิดหน้าเว็บ\r\n+                wsUrl = `ws://${hostname}:3000/ws`;\r\n+            } else {\r\n+                wsUrl = 'wss://pkderiv.shop/ws';\r\n+            }\r\n+            \r\n             // แสดง URL ที่จะเชื่อมต่อ\r\n             addMessage('กำลังเชื่อมต่อไปที่ ' + wsUrl + '...');\r\n             \r\n             // สร้าง WebSocket connection\r\n"
                 }
             ],
             "date": 1766437029512,

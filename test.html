@@ -273,12 +273,18 @@
                 return;
             }
 
-            // ตรวจสอบว่าเปิดจาก localhost หรือ production
+            // ตรวจสอบว่าเปิดจาก localhost/127.0.0.1 หรือ production
             // localhost = ใช้ ws:// (ไม่มี SSL)
             // production = ใช้ wss:// (มี SSL)
-            const wsUrl = window.location.hostname === 'localhost' 
-                ? 'ws://localhost:3000/ws'           // สำหรับทดสอบ local
-                : 'wss://pkderiv.shop/ws';           // สำหรับ production บน EC2
+            let wsUrl;
+            const hostname = window.location.hostname;
+            
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                // ใช้ hostname เดียวกับที่เปิดหน้าเว็บ
+                wsUrl = `ws://${hostname}:3000/ws`;
+            } else {
+                wsUrl = 'wss://pkderiv.shop/ws';
+            }
             
             // แสดง URL ที่จะเชื่อมต่อ
             addMessage('กำลังเชื่อมต่อไปที่ ' + wsUrl + '...');
