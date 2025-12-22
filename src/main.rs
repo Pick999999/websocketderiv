@@ -254,7 +254,7 @@ mod tests {
         let ping = ping_request();
         assert_eq!(ping["ping"], 1);
 
-        let ticks = ticks_request("R_10");
-        assert_eq!(ticks["ticks"], "R_10");
+        let ticks = ticks_request("R_110");
+        assert_eq!(ticks["ticks"], "R_110");
     }
 }
