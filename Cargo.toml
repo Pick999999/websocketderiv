@@ -12,3 +12,7 @@ serde_json = "1.0"
 futures-util = "0.3"
 tracing = "0.1"
 tracing-subscriber = "0.3"
+
+# ✨ เพิ่มใหม่: tower-http สำหรับ CORS
+# เพื่อให้ pkderiv.shop เรียก WebSocket API จาก domain อื่นได้
+tower-http = { version = "0.5", features = ["cors"] }

@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1766436425260,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1766436946391,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,77 @@\n # 📘 คู่มือการใช้งาน \r\n-  Version2 ก่อนเพิ่มการเชื่อมโยงกับ pkderiv\n\\ No newline at end of file\n+  Version2 เพิ่มการเชื่อมโยงกับ pkderiv\r\n+  📝 สรุปส่วนที่เพิ่มเข้ามา:\r\n+  1. Cargo.toml 📦\r\n+    # ✨ เพิ่มใหม่\r\n+    tower-http = { version = \"0.5\", features = [\"cors\"] }\r\n+    เหตุผล: เพื่อรองรับ CORS ให้ pkderiv.shop เรียกได้\r\n+\r\n+   2. Rust Code (main.rs) 🦀\r\n+     // ✨ เพิ่มใหม่: import CORS\r\n+    use tower_http::cors::{CorsLayer, Any}; \r\n+    CORS Configuration\r\n+    // ✨✨✨ เพิ่มใหม่: CORS Layer\r\n+   let cors = CorsLayer::new()\r\n+    .allow_origin(Any)      // อนุญาตทุก domain\r\n+    .allow_methods(Any)     // อนุญาตทุก method\r\n+    .allow_headers(Any);    // อนุญาตทุก headers\r\n+   // เพิ่ม CORS เข้า Router\r\n+    let app = Router::new()\r\n+    .route(\"/\", get(root_handler))\r\n+    .route(\"/health\", get(health_handler))\r\n+    .route(\"/ws\", get(ws_handler))\r\n+    .layer(cors);  // ✨ เพิ่มบรรทัดนี้\r\n+  //Bind Address  \r\n+   // ✨ สำคัญ: ใช้ 0.0.0.0 แทน 127.0.0.1\r\n+  let addr = \"0.0.0.0:3000\";  // รับ connection จากภายนอกได้\r\n+\r\n+  3. HTML Code (test.html) 🌐\r\n+     Auto-detect WebSocket URL \r\n+      // ✨✨✨ เพิ่มใหม่: Auto-detect\r\n+const wsUrl = window.location.hostname === 'localhost' \r\n+    ? 'ws://localhost:3000/ws'      // ทดสอบ local\r\n+    : 'wss://pkderiv.shop/ws';      // production\r\n+```\r\n+\r\n+---\r\n+\r\n+## 🎯 ทำไมต้องเพิ่มส่วนเหล่านี้?\r\n+\r\n+| ส่วนที่เพิ่ม | เหตุผล |\r\n+|------------|--------|\r\n+| **CORS** | ให้ website จาก domain อื่น (pkderiv.shop) เรียก API ได้ |\r\n+| **0.0.0.0** | รับ connection จากภายนอก EC2 ได้ (ถ้าใช้ 127.0.0.1 จะรับแค่ local) |\r\n+| **Auto-detect URL** | HTML รู้ว่าต้องเชื่อมไปที่ localhost หรือ production |\r\n+| **wss://** | ใช้ WebSocket Secure (SSL) สำหรับ production |\r\n+\r\n+---\r\n+\r\n+## 🔄 Flow การทำงาน:\r\n+```\r\n+1. HTML อยู่ที่ pkderiv.shop\r\n+   ↓\r\n+2. ตรวจสอบ hostname → ไม่ใช่ localhost\r\n+   ↓\r\n+3. ใช้ URL: wss://pkderiv.shop/ws\r\n+   ↓\r\n+4. Request ผ่าน Nginx (port 443) + SSL\r\n+   ↓\r\n+5. Nginx forward ไป Rust (port 3000)\r\n+   ↓\r\n+6. Rust มี CORS อนุญาต → เชื่อมต่อสำเร็จ! ✅\r\n+```\r\n+\r\n+---\r\n+\r\n+## ✅ ทดสอบ:\r\n+\r\n+### **Local (ก่อน deploy):**\r\n+```\r\n+เปิด: file:///test.html\r\n+→ เชื่อมต่อ: ws://localhost:3000/ws\r\n+```\r\n+\r\n+### **Production (หลัง deploy):**\r\n+```\r\n+เปิด: https://pkderiv.shop/test.html\r\n+→ เชื่อมต่อ: wss://pkderiv.shop/ws\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1766436425260,

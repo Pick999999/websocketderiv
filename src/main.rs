@@ -2,20 +2,24 @@
 /*
 [package]
 name = "deriv-websocket"
-version = "1.1.111"
+version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 axum = { version = "0.7", features = ["ws"] }
 tokio = { version = "1", features = ["full"] }
-tokio-tungstenite = "0.23"
+tokio-tungstenite = { version = "0.23", features = ["native-tls"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 futures-util = "0.3"
 tracing = "0.1"
 tracing-subscriber = "0.3"
+
+# ✨ เพิ่มใหม่: tower-http สำหรับ CORS
+# เพื่อให้ pkderiv.shop เรียก WebSocket API จาก domain อื่นได้
+tower-http = { version = "0.5", features = ["cors"] }
 */
-// version นี้ยังไม่ได้เชื่อมโยงกับ pkderiv
+
 use axum::{
     extract::ws::{Message, WebSocket, WebSocketUpgrade},
     response::IntoResponse,
@@ -28,6 +32,10 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio_tungstenite::{connect_async, tungstenite::Message as TungsteniteMessage};
 use tracing::{info, error};
+
+// ✨ เพิ่มใหม่: import CORS จาก tower-http
+// ใช้สำหรับอนุญาตให้ website จาก domain อื่นเรียก API ได้
+use tower_http::cors::{CorsLayer, Any};
 
 type WsStream = tokio_tungstenite::WebSocketStream<
     tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>
@@ -176,19 +184,32 @@ async fn main() {
         .with_max_level(tracing::Level::INFO)
         .init();
 
+    // ✨✨✨ เพิ่มใหม่: CORS Layer ✨✨✨
+    // อนุญาตให้ทุก origin (domain) เรียก API ได้
+    // ถ้าต้องการจำกัดเฉพาะ pkderiv.shop ใช้:
+    // .allow_origin("https://pkderiv.shop".parse::<HeaderValue>().unwrap())
+    let cors = CorsLayer::new()
+        .allow_origin(Any)      // อนุญาตทุก domain (สำหรับ production ควรระบุ domain ที่ชัดเจน)
+        .allow_methods(Any)     // อนุญาตทุก HTTP method (GET, POST, etc.)
+        .allow_headers(Any);    // อนุญาตทุก headers
+
     // สร้าง router
     let app = Router::new()
         .route("/", get(root_handler))
         .route("/health", get(health_handler))
-        .route("/ws", get(ws_handler));
+        .route("/ws", get(ws_handler))
+        .layer(cors);  // ✨ เพิ่ม CORS layer เข้าไป
 
-    // Bind to address
+    // ✨ สำคัญ: ใช้ 0.0.0.0 แทน 127.0.0.1
+    // เพื่อให้รับ connection จากภายนอก EC2 ได้
+    // ถ้าใช้ 127.0.0.1 จะรับได้แค่ localhost เท่านั้น
     let addr = "0.0.0.0:3000";
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     
     println!("\n🚀 Server is running!");
     println!("📍 Address: http://{}", addr);
     println!("🔌 WebSocket: ws://localhost:3000/ws");
+    println!("🌐 External WebSocket: wss://pkderiv.shop/ws");  // ✨ เพิ่มบรรทัดนี้
     println!("❤️  Health check: http://localhost:3000/health\n");
 
     // Start server
@@ -254,7 +275,7 @@ mod tests {
         let ping = ping_request();
         assert_eq!(ping["ping"], 1);
 
-        let ticks = ticks_request("R_110");
-        assert_eq!(ticks["ticks"], "R_110");
+        let ticks = ticks_request("R_50");
+        assert_eq!(ticks["ticks"], "R_50");
     }
 }

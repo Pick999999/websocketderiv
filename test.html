@@ -266,14 +266,25 @@
             return div.innerHTML;
         }
 
+        // ✨✨✨ เพิ่มใหม่: Auto-detect WebSocket URL ✨✨✨
         function connect() {
             if (ws && ws.readyState === WebSocket.OPEN) {
                 addMessage('เชื่อมต่ออยู่แล้ว!');
                 return;
             }
 
-            addMessage('กำลังเชื่อมต่อไปที่ ws://localhost:3000/ws...');
-            ws = new WebSocket('ws://localhost:3000/ws');
+            // ตรวจสอบว่าเปิดจาก localhost หรือ production
+            // localhost = ใช้ ws:// (ไม่มี SSL)
+            // production = ใช้ wss:// (มี SSL)
+            const wsUrl = window.location.hostname === 'localhost' 
+                ? 'ws://localhost:3000/ws'           // สำหรับทดสอบ local
+                : 'wss://pkderiv.shop/ws';           // สำหรับ production บน EC2
+            
+            // แสดง URL ที่จะเชื่อมต่อ
+            addMessage('กำลังเชื่อมต่อไปที่ ' + wsUrl + '...');
+            
+            // สร้าง WebSocket connection
+            ws = new WebSocket(wsUrl);
             
             ws.onopen = () => {
                 addMessage('✅ เชื่อมต่อสำเร็จ!');
@@ -290,7 +301,7 @@
             };
 
             ws.onerror = (error) => {
-                addMessage('❌ เกิดข้อผิดพลาด: ตรวจสอบว่า Server ทำงานอยู่ที่ localhost:3000');
+                addMessage('❌ เกิดข้อผิดพลาด: ตรวจสอบว่า Server ทำงานอยู่');
                 console.error('WebSocket error:', error);
             };
 
@@ -365,6 +376,9 @@
 
         // เชื่อมต่ออัตโนมัติเมื่อเปิดหน้า
         window.onload = () => {
+            // แสดงว่าจะเชื่อมต่อไปที่ไหน
+            const env = window.location.hostname === 'localhost' ? 'Local' : 'Production';
+            addMessage('🌐 Environment: ' + env);
             addMessage('พร้อมใช้งาน! กดปุ่ม "เชื่อมต่อ" เพื่อเริ่มต้น');
         };
     </script>

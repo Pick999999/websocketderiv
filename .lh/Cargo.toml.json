@@ -1,0 +1,18 @@
+{
+    "sourceFile": "Cargo.toml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1766437029653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1766437029653,
+            "name": "Commit-0",
+            "content": "[package]\nname = \"deriv-websocket\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\naxum = { version = \"0.7\", features = [\"ws\"] }\ntokio = { version = \"1\", features = [\"full\"] }\ntokio-tungstenite = { version = \"0.23\", features = [\"native-tls\"] }\nserde = { version = \"1.0\", features = [\"derive\"] }\nserde_json = \"1.0\"\nfutures-util = \"0.3\"\ntracing = \"0.1\"\ntracing-subscriber = \"0.3\"\n\n# ✨ เพิ่มใหม่: tower-http สำหรับ CORS\n# เพื่อให้ pkderiv.shop เรียก WebSocket API จาก domain อื่นได้\ntower-http = { version = \"0.5\", features = [\"cors\"] }"
+        }
+    ]
+}
