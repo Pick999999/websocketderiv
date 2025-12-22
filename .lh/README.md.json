@@ -1,0 +1,18 @@
+{
+    "sourceFile": "README.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1766436425260,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1766436425260,
+            "name": "Commit-0",
+            "content": "# 📘 คู่มือการใช้งาน \r\n  Version2 ก่อนเพิ่มการเชื่อมโยงกับ pkderiv"
+        }
+    ]
+}
