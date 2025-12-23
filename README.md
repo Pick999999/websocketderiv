@@ -76,4 +76,4 @@ const wsUrl = window.location.hostname === 'localhost'
 เปิด: https://pkderiv.shop/test.html
 → เชื่อมต่อ: wss://pkderiv.shop/ws 
 Rust WebSocket Proxy Server.draw
-![Deriv Proxy Diagram](./images/deriv-proxy.svg)
+![Deriv Proxy Diagram](./Rust WebSocket Proxy Server.drawio.svg)
