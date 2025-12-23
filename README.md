@@ -74,4 +74,6 @@ const wsUrl = window.location.hostname === 'localhost'
 ### **Production (หลัง deploy):**
 ```
 เปิด: https://pkderiv.shop/test.html
-→ เชื่อมต่อ: wss://pkderiv.shop/ws
+→ เชื่อมต่อ: wss://pkderiv.shop/ws 
+Rust WebSocket Proxy Server.draw
+![Deriv Proxy Diagram](./images/deriv-proxy.svg)
