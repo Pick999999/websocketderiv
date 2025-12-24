@@ -211,6 +211,7 @@ async fn main() {
     println!("🔌 WebSocket: ws://localhost:3000/ws");
     println!("🌐 External WebSocket: wss://pkderiv.shop/ws");  // ✨ เพิ่มบรรทัดนี้
     println!("❤️  Health check: http://localhost:3000/health\n");
+    println!("🌐❤️🌐  html local page: open  test.html in live server หรือ http://127.0.0.1:5500/test.html  mode \n");
 
     // Start server
     axum::serve(listener, app).await.unwrap();

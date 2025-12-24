@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1766437029653,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1766454160734,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n [package]\n-name = \"deriv-websocket\"\n+name = \"websocketderiv\"\n version = \"0.1.0\"\n edition = \"2021\"\n \n [dependencies]\n"
+                },
+                {
+                    "date": 1766454272941,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n [package]\n-name = \"websocketderiv\"\n+name = \"deriv-websocket\"\n version = \"0.1.0\"\n edition = \"2021\"\n \n [dependencies]\n"
                 }
             ],
             "date": 1766437029653,

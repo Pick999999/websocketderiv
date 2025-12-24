@@ -1,0 +1,27 @@
+ {
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug deriv-websocket",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin", 
+                    "deriv-websocket",
+                    "--package",
+                    "deriv-websocket"
+                ],
+                "filter": {
+                    "kind": "executable"
+                }
+            },
+            "args": [], 
+            "cwd": "${workspaceFolder}",
+            // *** บรรทัดนี้คือการแก้ไขที่สำคัญที่สุด ***
+            // เราบอก CodeLLDB ให้รู้ว่าไฟล์ executable คือ deriv-websocket.exe
+            "program": "${workspaceFolder}/target/debug/deriv-websocket.exe" 
+        }
+    ]
+}
