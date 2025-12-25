@@ -1,0 +1,90 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="หน้า-1" id="lLHNdOLfBZYi5g6C5kNl">
+    <mxGraphModel dx="1042" dy="535" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="group_frontend" parent="1" style="shape=swarm;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=10;fontStyle=1" value="ส่วนหน้าเว็บ (Browser / JavaScript)" vertex="1">
+          <mxGeometry height="560" width="260" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="group_backend" parent="1" style="shape=swarm;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacingLeft=10;fontStyle=1" value="ส่วนเซิร์ฟเวอร์ (Rust Axum &amp; Tokio)" vertex="1">
+          <mxGeometry height="560" width="380" x="320" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="group_deriv" parent="1" style="shape=swarm;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;verticalAlign=top;spacingLeft=10;fontStyle=1" value="แหล่งข้อมูลภายนอก (Deriv API)" vertex="1">
+          <mxGeometry height="240" width="220" x="740" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="js_ws_init" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="&lt;b&gt;วงจรชีวิต WebSocket&lt;/b&gt;&#xa;connectWS()&#xa;เชื่อมต่อใหม่อัตโนมัติ (2 วินาที)" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="js_ui_request" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="&lt;b&gt;การกระทำของผู้ใช้&lt;/b&gt;&#xa;เลือกสินทรัพย์ &amp; กดปุ่ม&#xa;ส่งคำสั่ง sendRequest()" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="js_dom_update" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" value="&lt;b&gt;อัปเดตหน้าจอ (DOM)&lt;/b&gt;&#xa;ws.onmessage&#xa;แสดงราคา &amp; เวลาปัจจุบัน" vertex="1">
+          <mxGeometry height="60" width="200" x="50" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="rust_init" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;b&gt;1. เริ่มต้นระบบ&lt;/b&gt;&#xa;สร้างท่อกระจายข้อมูล (L40)&#xa;[crate: tokio broadcast]" vertex="1">
+          <mxGeometry height="70" width="200" x="410" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rust_cmd_parse" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" value="&lt;b&gt;2. ตรวจสอบคำสั่ง &amp; Error&lt;/b&gt;&#xa;แกะ JSON (L81)&#xa;&lt;i&gt;หากผิดพลาด -&gt; แจ้งเตือนใน Log&lt;/i&gt;" vertex="1">
+          <mxGeometry height="110" width="220" x="400" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="rust_concurrency" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;3. จัดการงานขนาน&lt;/b&gt;&#xa;หยุดงานเก่า (L88)&#xa;เริ่มงานใหม่ในพื้นหลัง" vertex="1">
+          <mxGeometry height="60" width="200" x="410" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="rust_deriv_conn" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="&lt;b&gt;4. เชื่อมต่อ API ภายนอก&lt;/b&gt;&#xa;เชื่อมต่อ WebSocket (L111)&#xa;[crate: tokio-tungstenite]" vertex="1">
+          <mxGeometry height="60" width="220" x="400" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="rust_parser" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=2;fillColor=#e1d5e7;" value="&lt;b&gt;5. ตัวแปลงข้อมูลยืดหยุ่น&lt;/b&gt;&#xa;จัดการ Error ข้อมูล (L145)&#xa;แปลงเป็นโครงสร้าง Candle" vertex="1">
+          <mxGeometry height="60" width="200" x="410" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="deriv_cloud" parent="1" style="shape=cloud;whiteSpace=wrap;html=1;" value="&lt;b&gt;เซิร์ฟเวอร์ Deriv&lt;/b&gt;&#xa;ตรวจสอบสิทธิ์ &amp; ดึงข้อมูลราคาล่าสุด" vertex="1">
+          <mxGeometry height="110" width="180" x="760" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_cmd" edge="1" parent="1" source="js_ui_request" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="rust_cmd_parse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label_cmd" connectable="0" parent="edge_cmd" style="edgeLabel;html=1;align=center;verticalAlign=middle;" value="ส่งคำสั่ง JSON" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint y="-10" as="geometry" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_abort" edge="1" parent="1" source="rust_cmd_parse" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="rust_concurrency">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_sub" edge="1" parent="1" source="rust_deriv_conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0.07;entryY=0.4;" target="deriv_cloud">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="420" />
+              <mxPoint x="680" y="324" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label_sub" connectable="0" parent="edge_sub" style="edgeLabel;html=1;align=center;verticalAlign=middle;" value="ร้องขอข้อมูลราคา" vertex="1">
+          <mxGeometry relative="1" x="0.2" as="geometry">
+            <mxPoint x="-15" y="-12" as="geometry" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_data" edge="1" parent="1" source="deriv_cloud" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.4;exitY=1;entryX=1;entryY=0.5;" target="rust_parser">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="832" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label_data" connectable="0" parent="edge_data" style="edgeLabel;html=1;align=center;verticalAlign=middle;" value="ส่งข้อมูลราคาดิบ" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint x="40" y="10" as="geometry" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_ui_upd" edge="1" parent="1" source="rust_parser" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="js_dom_update">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="label_broadcast" connectable="0" parent="edge_ui_upd" style="edgeLabel;html=1;align=center;verticalAlign=middle;" value="กระจายข้อมูลเรียลไทม์" vertex="1">
+          <mxGeometry relative="1" x="0.1" as="geometry">
+            <mxPoint x="10" y="-10" as="geometry" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
